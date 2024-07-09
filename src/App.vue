@@ -5,7 +5,7 @@ const userStore = useUserStore();
 
 <template>
   <div>
-    <h1>Hello from user: {{ userStore.user.name }}</h1>
+    <h1 class="bg-red-400">Hello from user: {{ userStore.user.name }}</h1>
     <h1>Hello from user: {{ userStore.app }}</h1>
   </div>
 </template>
