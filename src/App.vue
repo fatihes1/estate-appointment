@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/UserStore.ts";
 const userStore = useUserStore();
-
 </script>
 
 <template>
