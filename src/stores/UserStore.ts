@@ -30,6 +30,7 @@ export const useUserStore = defineStore("userStore",{
         async fetchAgents() {
             try {
                 const response = await getAllAgents() // Adjust the URL to your API endpoint
+                console.log("AGENTS: ", response.data.records)
                 this.setAgents(response.data.records);
                 this.setActiveAgent(response.data.records[0])
             } catch (error) {

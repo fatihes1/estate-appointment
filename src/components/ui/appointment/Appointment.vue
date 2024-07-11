@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h2 class="text-base font-semibold leading-6 text-gray-900">Upcoming meetings for agent {{ userStore.agent.fields.agent_name }}</h2>
+    <h2 class="text-base font-semibold leading-6 text-gray-900">All appointments for agent {{ userStore.agent.fields.agent_name }}</h2>
     <div class="lg:grid lg:grid-cols-12 lg:gap-x-16">
       <div class="mt-10 text-center lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:mt-9 xl:col-start-9">
         TODO: ADD CALENDER HERE
         <button type="button" class="mt-8 w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add event</button>
       </div>
       <ol v-if="!appointmentStore.loading" class="mt-4 divide-y divide-gray-100 text-sm leading-6 lg:col-span-7 xl:col-span-8">
-        <li v-for="appointment in appointmentStore.appointments" :key="appointment.id" class="relative flex space-x-6 py-6 xl:static">
+        <li v-if="appointmentStore.appointments.length > 0" v-for="appointment in appointmentStore.appointments" :key="appointment.id" class="relative flex space-x-6 py-6 xl:static">
           <div class="w-12 h-12 flex flex-row items-center justify-center text-white rounded-full bg-indigo-600" >
             {{ appointment.fields.contact_name[0].charAt(0) }}{{ appointment.fields.contact_surname[0].charAt(0) }}
           </div>
@@ -56,10 +56,13 @@
             </transition>
           </Menu>
         </li>
+        <li v-else>
+          <empty-state />
+        </li>
       </ol>
-      <div class="w-96" v-if="appointmentStore.loading">
-        <loader/>
-      </div>
+    </div>
+    <div class="w-96" v-if="appointmentStore.loading">
+      <loader/>
     </div>
   </div>
 </template>
@@ -75,6 +78,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import {useUserStore} from "@/stores/UserStore.ts";
 import {useAppointmentStore} from "@/stores/AppointmentStore.ts";
 import Loader from "@/components/ui/common/loader.vue";
+import EmptyState from "@/components/ui/common/empty/EmptyState.vue";
 
 
 const userStore = useUserStore()

@@ -1,10 +1,11 @@
 import axiosInstance from "./axios-instance.ts";
 const AGENTS_KEY = 'Agents'
 
-export function getAllAgents(maxRecords: number = 10) {
+export function getAllAgents(pageSize?: number , offset?: string) {
     return axiosInstance.get(AGENTS_KEY, {
         params: {
-            maxRecords
+            pageSize,
+            offset
         }
     })
 }
