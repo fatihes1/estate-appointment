@@ -12,3 +12,11 @@ export function getAllAppointments(maxRecords: number = 10) {
 export function getOneAppointment(appointmentId: string) {
     return axiosInstance.get(`${APPOINTMENT_KEY}/${appointmentId}`)
 }
+
+export function getAppointmentsByIds(appointmentIds: string[]) {
+    return axiosInstance.get(APPOINTMENT_KEY, {
+        params: {
+            filterByFormula: `OR(${appointmentIds.map(id => `RECORD_ID()='${id}'`).join(',')})`
+        }
+    })
+}
