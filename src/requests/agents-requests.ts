@@ -12,3 +12,4 @@ export function getAllAgents(maxRecords: number = 10) {
 export function getOneAgent(agentId: string) {
     return axiosInstance.get(`${AGENTS_KEY}/${agentId}`)
 }
+
