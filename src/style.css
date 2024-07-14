@@ -7,4 +7,9 @@
     .table-height {
         max-height: 65vh;
     }
+    .appointment-list {
+        height: 65vh;
+        max-height: 65vh;
+        overflow-y: scroll;
+    }
 }

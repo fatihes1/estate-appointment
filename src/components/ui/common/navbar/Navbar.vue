@@ -4,6 +4,17 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { PlusIcon } from '@heroicons/vue/20/solid'
 import UserSelection from "@/components/ui/common/navbar/UserSelection.vue";
+import {ref} from "vue";
+import AppointmentModal from "@/components/ui/modals/AppointmentModal.vue";
+
+const isOpen = ref(false)
+function closeModal() {
+  isOpen.value = false
+}
+
+function openCreateModal() {
+  isOpen.value = true
+}
 
 </script>
 
@@ -21,20 +32,20 @@ import UserSelection from "@/components/ui/common/navbar/UserSelection.vue";
               <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true" />
             </DisclosureButton>
           </div>
-          <div class="flex flex-shrink-0 items-center">
-            <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
-          </div>
+          <router-link to="/" class="flex flex-shrink-0 items-center bg-indigo-600 rounded-lg my-2 px-3 py-2">
+            <img class="h-8 w-auto" src="https://cdn.prod.website-files.com/644a6ceae40c04757d3fddbf/645e277376ae297d29a9d340_Iceberg-Digital.svg" alt="Your Company" />
+          </router-link>
           <div class="hidden md:ml-6 md:flex md:space-x-8">
             <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
-            <router-link to="/" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:border-b-2 hover:border-gray-300 hover:text-gray-700" active-class="border-b-2 border-indigo-500 text-indigo-600" exact-active-class="border-b-2 border-indigo-500 text-indigo-600">Appointments</router-link>
+            <router-link to="/" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:border-b-2 hover:border-gray-300 hover:text-gray-700" active-class="border-b-2 border-indigo-500 text-indigo-600" exact-active-class="border-b-2 border-indigo-500 text-indigo-600">Home</router-link>
             <router-link to="/clients" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:border-b-2 hover:border-gray-300 hover:text-gray-700" active-class="border-b-2 border-indigo-500 text-indigo-600">Clients</router-link>
             <router-link to="/agents" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:border-b-2 hover:border-gray-300 hover:text-gray-700" active-class="border-b-2 border-indigo-500 text-indigo-600">Agents</router-link>
-            <router-link to="/calender" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:border-b-2 hover:border-gray-300 hover:text-gray-700" active-class="border-b-2 border-indigo-500 text-indigo-600">Calendar</router-link>
+            <router-link to="/appointments" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:border-b-2 hover:border-gray-300 hover:text-gray-700" active-class="border-b-2 border-indigo-500 text-indigo-600">Appointments</router-link>
           </div>
         </div>
         <div class="flex flex-row items-center justify-center gap-x-4">
           <div class="flex-shrink-0">
-            <button type="button" class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <button @click="openCreateModal" type="button" class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               <PlusIcon class="-ml-0.5 h-5 w-5" aria-hidden="true" />
               New Appointment
             </button>
@@ -70,6 +81,11 @@ import UserSelection from "@/components/ui/common/navbar/UserSelection.vue";
       </div>
     </DisclosurePanel>
   </Disclosure>
+  <appointment-modal
+      :isOpen="isOpen"
+      :on-cancel="closeModal"
+      :modal-type="'add'"
+  />
 </template>
 
 <style scoped>
