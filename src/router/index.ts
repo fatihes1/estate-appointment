@@ -1,13 +1,15 @@
 import { createWebHistory, createRouter } from "vue-router";
-import AppointmentPage from "../components/pages/AppointmentPage.vue";
+import HomePage from "../components/pages/HomePage.vue";
 import ContactPage from "../components/pages/ContactPage.vue";
 import AgentPage from "../components/pages/AgentPage.vue";
+import AppointmentPage from "../components/pages/AppointmentPage.vue";
+import DashboardPage from "../components/pages/DashboardPage.vue";
 
 const routes = [
     {
         path: "/",
-        name: "Appointment",
-        component: AppointmentPage,
+        name: "Home",
+        component: DashboardPage,
     },
     {
         path: '/clients',
@@ -18,6 +20,11 @@ const routes = [
         path: '/agents',
         name: 'Agents',
         component: AgentPage
+    },
+    {
+        path: '/appointments',
+        name: 'Appointments',
+        component: AppointmentPage
     }
 ];
 

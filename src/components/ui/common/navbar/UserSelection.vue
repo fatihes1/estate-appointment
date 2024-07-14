@@ -2,7 +2,7 @@
 import { useUserStore } from '@/stores/UserStore.ts';
 import { useAppointmentStore} from "@/stores/AppointmentStore.ts";
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
-import {getAppointmentsByIds } from "@/requests/appointments-requests.ts"
+import {getUpcomingAppointmentsByIds } from "@/requests/appointments-requests.ts"
 
 const userStore = useUserStore();
 const appointmentStore = useAppointmentStore();
@@ -14,6 +14,7 @@ import {
 } from '@headlessui/vue'
 import {onMounted, watch} from "vue";
 import {AllAppointmentsResponseModel} from "@/models/appointments-model";
+import Avatar from "@/components/ui/common/avatar/Avatar.vue";
 
 onMounted(async () => {
   await userStore.fetchAgents();
@@ -23,7 +24,7 @@ onMounted(async () => {
 watch(() => userStore.agent, (newVal) => {
   appointmentStore.setLoading(true)
   if (newVal.fields.appointments) {
-    getAppointmentsByIds(newVal.fields.appointments).then((appointments: AllAppointmentsResponseModel) => {
+    getUpcomingAppointmentsByIds(newVal.fields.appointments).then((appointments: AllAppointmentsResponseModel) => {
       appointmentStore.setAppointments(appointments.data.records);
       appointmentStore.setLoading(false)
     })
@@ -77,9 +78,7 @@ watch(() => userStore.agent, (newVal) => {
                   'relative flex flex-row justify-start items-center gap-x-2 cursor-pointer select-none py-2 pl-10 pr-4',
                 ]"
               >
-                <div class="w-8 h-8 flex flex-row items-center justify-center text-white rounded-full" :style="{ backgroundColor: person.fields.color }" >
-                  {{ person.fields.agent_name.charAt(0) }}{{ person.fields.agent_surname.charAt(0) }}
-                </div>
+                <avatar :user-surname="person.fields.agent_name" :user-name="person.fields.agent_surname" :user-color="person.fields.color" />
                 <span
                     :class="[
                     selected ? 'font-medium' : 'font-normal',
