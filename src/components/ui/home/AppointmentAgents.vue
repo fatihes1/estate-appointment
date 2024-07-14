@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import AvatarGroup from "@/components/ui/common/avatar/AvatarGroup.vue";
+import AvatarGroup from "@/components/ui/common/filters/AvatarGroup.vue";
 import {useUserStore} from "@/stores/UserStore.ts";
 import {onMounted, ref, watch} from "vue";
 const userStore = useUserStore();
@@ -36,7 +36,9 @@ onMounted(() => {
       surname: user.fields.agent_surname,
       color: user.fields.color
     }
-  })" />
+  })"
+    :max-count="3"
+    />
   </div>
 </template>
 

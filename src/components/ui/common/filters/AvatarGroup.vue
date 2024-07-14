@@ -1,17 +1,17 @@
 
 <template>
   <a-avatar-group
-    :max-count="4"
+    :max-count="maxCount"
     size="default"
     :max-style="{ backgroundColor: '#e2e2e2', color: '#000000' }"
   >
     <a-tooltip v-for="user in users" :title="user.name + ' ' + user.surname" :key="user.id">
       <a-avatar
-          @click="handleOnClickAvatar(user.id)"
-          class="cursor-pointer border-2 border-white"
+          @click="clickable ? handleOnClickAvatar(user.id) : null"
+          class="border-2 border-white text-xs flex justify-center items-center"
           :key="user.id"
           :style="{ backgroundColor: user.color }"
-          :class="{ '!border-green-500': selectedUsers.includes(user.id)}"
+          :class="{ '!border-green-500': selectedUsers.includes(user.id) , '!cursor-pointer': clickable}"
       >{{ user.name.charAt(0) }}{{ user.surname.charAt(0) }}</a-avatar>
     </a-tooltip>
   </a-avatar-group>
@@ -21,18 +21,25 @@
 
 import Avatar from "@/components/ui/common/avatar/Avatar.vue";
 import {ref, watch} from "vue";
+import {useStore} from "@headlessui/vue/dist/hooks/use-store";
 
 const selectedUsers = ref([]);
-
+import { useAppointmentStore } from "@/stores/AppointmentStore.js";
+const appointmentStore = useAppointmentStore();
 const handleOnClickAvatar = (user) => {
-  // If the user already selected, deselect it
-  // If not add the list
   if (selectedUsers.value.includes(user)) {
-    selectedUsers.value = selectedUsers.value.filter((selectedUser) => selectedUser !== user);
+    selectedUsers.value = selectedUsers.value.filter((id) => id !== user);
   } else {
     selectedUsers.value = [...selectedUsers.value, user];
   }
 }
+
+watch(selectedUsers, (newVal) => {
+  console.log("SELECTED USERS", newVal)
+  appointmentStore.setSelectedAgents(newVal);
+})
+
+
 
 const props = defineProps({
   maxCount: {
@@ -59,6 +66,11 @@ const props = defineProps({
     type: Array,
     default: [],
     required: true
+  },
+  clickable: {
+    type: Boolean,
+    default: false,
+    required: false
   }
 })
 
