@@ -2,7 +2,7 @@
 
 import AppointmentListItem from "@/components/ui/home/AppointmentListItem.vue";
 import {useAppointmentStore} from "@/stores/AppointmentStore.ts";
-import {watch} from "vue";
+import {computed, watch} from "vue";
 const appointmentStore = useAppointmentStore();
 import { storeToRefs } from "pinia";
 const { paginatedAppointments, totalAppointments, currentPage, totalPages, loading, pageSize } = storeToRefs(appointmentStore);
@@ -12,6 +12,7 @@ watch(() => appointmentStore.paginatedAppointments, () => {
 })
 
 import { ref } from 'vue';
+import Loader from "@/components/ui/common/loader.vue";
 const current = ref(2);
 
 function handlePageChange(page: number) {
@@ -29,22 +30,34 @@ function prevPage() {
 function nextPage() {
   appointmentStore.setPage(currentPage.value + 1);
 }
+const paginatedFilteredAppointments = computed(() => appointmentStore.paginatedFilteredAppointments)
+const totalFilteredAppointments = computed(() => appointmentStore.totalFilteredAppointments)
+//const currentPage = computed(() => appointmentStore.currentPage)
+
+watch(() => appointmentStore.paginatedFilteredAppointments, () => {
+  console.log("APPOINTMENT PAGINATE FILTE: ", appointmentStore.paginatedFilteredAppointments);
+})
 
 </script>
 
 <template>
-  <div class="appointment-list">
-    <appointment-list-item v-for="appointment in appointmentStore.paginatedAppointments" :appointment="appointment" :key="appointment.id" />
+  <div v-if="appointmentStore.loading">
+    <loader />
   </div>
-  <div class="flex flex-row justify-end mt-4">
-    <a-pagination
-        :current="currentPage"
-        :total="totalAppointments"
-        :pageSize="pageSize"
-        @change="handlePageChange"
-        show-size-changer
-        @showSizeChange="handlePageSizeChange"
-    />
+  <div v-else>
+    <div class="appointment-list px-5 md:px-0">
+      <appointment-list-item v-for="(appointment, index) in appointmentStore.paginatedFilteredAppointments" :appointment="appointment" :key="appointment.id" :index="index" />
+    </div>
+    <div class="flex flex-row justify-end mt-4 pb-3">
+      <a-pagination
+          :current="currentPage"
+          :total="totalFilteredAppointments"
+          :pageSize="pageSize"
+          @change="handlePageChange"
+          show-size-changer
+          @showSizeChange="handlePageSizeChange"
+      />
+    </div>
   </div>
 </template>
 

@@ -43,14 +43,16 @@ function openCreateModal() {
             <router-link to="/appointments" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:border-b-2 hover:border-gray-300 hover:text-gray-700" active-class="border-b-2 border-indigo-500 text-indigo-600">Appointments</router-link>
           </div>
         </div>
-        <div class="flex flex-row items-center justify-center gap-x-4">
+        <div class="flex-row items-center justify-center gap-x-4 hidden md:flex">
           <div class="flex-shrink-0">
             <button @click="openCreateModal" type="button" class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               <PlusIcon class="-ml-0.5 h-5 w-5" aria-hidden="true" />
               New Appointment
             </button>
           </div>
-          <UserSelection />
+          <div class="hidden md:flex">
+            <user-selection />
+          </div>
         </div>
       </div>
     </div>
@@ -58,25 +60,91 @@ function openCreateModal() {
     <DisclosurePanel class="md:hidden">
       <div class="space-y-1 pb-3 pt-2">
         <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
-        <DisclosureButton as="a" href="#" class="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700 sm:pl-5 sm:pr-6">Dashboard</DisclosureButton>
-        <DisclosureButton as="a" href="#" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6">Team</DisclosureButton>
-        <DisclosureButton as="a" href="#" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6">Projects</DisclosureButton>
-        <DisclosureButton as="a" href="#" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6">Calendar</DisclosureButton>
+        <router-link
+            to="/"
+            custom
+            v-slot="{ isActive, isExactActive, href, navigate }"
+        >
+          <a
+              :href="href"
+              @click="navigate"
+              :class="[
+      isExactActive
+        ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+        : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
+      'block border-l-4 py-2 pl-3 pr-4 text-base font-medium sm:pl-5 sm:pr-6'
+    ]"
+          >
+            Dashboard
+          </a>
+        </router-link>
+
+        <router-link
+            to="/clients"
+            custom
+            v-slot="{ isActive, href, navigate }"
+        >
+          <a
+              :href="href"
+              @click="navigate"
+              :class="[
+      isActive
+        ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+        : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
+      'block border-l-4 py-2 pl-3 pr-4 text-base font-medium sm:pl-5 sm:pr-6'
+    ]"
+          >
+            Team
+          </a>
+        </router-link>
+
+        <router-link
+            to="/agents"
+            custom
+            v-slot="{ isActive, href, navigate }"
+        >
+          <a
+              :href="href"
+              @click="navigate"
+              :class="[
+      isActive
+        ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+        : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
+      'block border-l-4 py-2 pl-3 pr-4 text-base font-medium sm:pl-5 sm:pr-6'
+    ]"
+          >
+            Projects
+          </a>
+        </router-link>
+
+        <router-link
+            to="/appointments"
+            custom
+            v-slot="{ isActive, href, navigate }"
+        >
+          <a
+              :href="href"
+              @click="navigate"
+              :class="[
+      isActive
+        ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+        : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
+      'block border-l-4 py-2 pl-3 pr-4 text-base font-medium sm:pl-5 sm:pr-6'
+    ]"
+          >
+            Calendar
+          </a>
+        </router-link>
       </div>
       <div class="border-t border-gray-200 pb-3 pt-4">
-        <div class="flex items-center px-4 sm:px-6">
+        <div class="flex flex-col items-start justify-center gap-y-4 px-4 sm:px-6">
           <div class="flex-shrink-0">
-            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+            <button @click="openCreateModal" type="button" class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <PlusIcon class="-ml-0.5 h-5 w-5" aria-hidden="true" />
+              New Appointment
+            </button>
           </div>
-          <div class="ml-3">
-            <div class="text-base font-medium text-gray-800">Tom Cook</div>
-            <div class="text-sm font-medium text-gray-500">tom@example.com</div>
-          </div>
-        </div>
-        <div class="mt-3 space-y-1">
-          <DisclosureButton as="a" href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6">Your Profile</DisclosureButton>
-          <DisclosureButton as="a" href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6">Settings</DisclosureButton>
-          <DisclosureButton as="a" href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6">Sign out</DisclosureButton>
+          <user-selection />
         </div>
       </div>
     </DisclosurePanel>

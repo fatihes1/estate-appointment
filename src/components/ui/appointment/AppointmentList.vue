@@ -1,7 +1,7 @@
 <template>
-  <ol v-if="!appointmentStore.loading" class="mt-4 divide-y divide-gray-100 text-sm leading-6 lg:col-span-7 xl:col-span-8">
+  <ol v-if="!appointmentStore.loading" class="mt-4 divide-y divide-gray-100 mx-5 text-sm leading-6 lg:col-span-7 xl:col-span-8">
     <li v-if="appointmentStore.appointments.length > 0" v-for="appointment in appointmentStore.appointments" :key="appointment.id" class="relative flex space-x-6 py-6 xl:static">
-      <avatar :user-surname="appointment.fields.contact_surname[0]" :user-name="appointment.fields.contact_name[0]" size="12" />
+      <avatar :user-surname="appointment.fields.contact_surname[0]" :user-name="appointment.fields.contact_name[0]" :size="12" />
       <div class="flex-auto">
         <h3 class="pr-10 font-semibold text-gray-900 xl:pr-0">{{ appointment.fields.contact_name[0] }} {{appointment.fields.contact_surname[0]}}</h3>
         <dl class="mt-2 flex flex-col text-gray-500 xl:flex-row">

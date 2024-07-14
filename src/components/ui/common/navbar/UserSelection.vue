@@ -23,6 +23,7 @@ onMounted(async () => {
 // watch userStore.agent and when changed, update appointmentStore.agent
 watch(() => userStore.agent, (newVal) => {
   appointmentStore.setLoading(true)
+  console.log("NEW VAL: ", newVal)
   if (newVal.fields.appointments) {
     getUpcomingAppointmentsByIds(newVal.fields.appointments).then((appointments: AllAppointmentsResponseModel) => {
       appointmentStore.setAppointments(appointments.data.records);
@@ -78,7 +79,7 @@ watch(() => userStore.agent, (newVal) => {
                   'relative flex flex-row justify-start items-center gap-x-2 cursor-pointer select-none py-2 pl-10 pr-4',
                 ]"
               >
-                <avatar :user-surname="person.fields.agent_name" :user-name="person.fields.agent_surname" :user-color="person.fields.color" />
+                <avatar :user-surname="person.fields.agent_surname" :user-name="person.fields.agent_name" :user-color="person.fields.color" />
                 <span
                     :class="[
                     selected ? 'font-medium' : 'font-normal',
