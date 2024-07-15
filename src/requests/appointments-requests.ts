@@ -58,3 +58,9 @@ export function updateAppointmentRequest(appointmentId: string, data: CreateAppo
         fields: data
     })
 }
+
+export function cancelAnAppointmentRequest(appointmentId: string, data: { is_cancelled: boolean }) {
+    return axiosInstance.patch(`${APPOINTMENT_KEY}/${appointmentId}`, {
+        fields: data
+    })
+}

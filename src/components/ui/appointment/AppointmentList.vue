@@ -1,5 +1,5 @@
 <template>
-  <ol v-if="!appointmentStore.loading" class="mt-4 divide-y divide-gray-100 mx-5 text-sm leading-6 lg:col-span-7 xl:col-span-8">
+  <ol v-if="!appointmentStore.loading" class="mt-4 divide-y divide-gray-100 mx-5 text-sm leading-6 lg:col-span-7 xl:col-span-8 w-full px-3 appointment-list-page">
     <li v-if="appointmentStore.appointments.length > 0" v-for="appointment in appointmentStore.appointments" :key="appointment.id" class="relative flex space-x-6 py-6 xl:static">
       <avatar :user-surname="appointment.fields.contact_surname[0]" :user-name="appointment.fields.contact_name[0]" :size="12" />
       <div class="flex-auto">
@@ -39,9 +39,14 @@
               <MenuItem v-slot="{ active }">
                 <div @click="openEditModal(appointment.id)" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm cursor-pointer']">Edit</div>
               </MenuItem>
-              <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Cancel</a>
-              </MenuItem>
+              <a-popconfirm
+                  title="Are you sure you want to cancel this appointment?"
+                  @confirm="handleOnCancelAnAppointment(appointment.id)"
+                  >
+                <MenuItem v-slot="{ active }">
+                    <div  :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm cursor-pointer']">Cancel</div>
+                </MenuItem>
+              </a-popconfirm>
             </div>
           </MenuItems>
         </transition>
@@ -79,11 +84,18 @@ import AppointmentModal from "@/components/ui/modals/AppointmentModal.vue";
 import {ref} from "vue";
 import dayjs from "dayjs";
 import Avatar from "@/components/ui/common/avatar/Avatar.vue";
+import {message} from "ant-design-vue";
 
 
 const appointmentStore = useAppointmentStore()
 const isOpen = ref(false)
 const contactData = ref({})
+
+const handleOnCancelAnAppointment = (appointmentId) => {
+  console.log('appointmentId', appointmentId)
+  appointmentStore.cancelAnAppointment(appointmentId)
+  message.success('Appointment cancelled successfully!')
+}
 
 
 function closeModal() {

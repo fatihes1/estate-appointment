@@ -5,6 +5,7 @@ import {
     UpdateAppointmentRequestModel
 } from "../models/appointments-model.ts";
 import {
+    cancelAnAppointmentRequest,
     createAppointmentRequest,
     getAllAppointments,
     updateAppointmentRequest
@@ -181,5 +182,17 @@ export const useAppointmentStore = defineStore("appointmentStore",{
                 this.appointments[updatedAppointmentViaAgentIndex] = { ...this.appointments[updatedAppointmentViaAgentIndex], ...response.data };
             }
         },
+        async cancelAnAppointment(appointmentId: string) {
+            const response = await cancelAnAppointmentRequest(appointmentId, { is_cancelled: true });
+            const updatedAppointmentIndex = this.allAppointments.findIndex(appointment => appointment.id === appointmentId);
+            if (updatedAppointmentIndex !== -1) {
+                this.allAppointments[updatedAppointmentIndex] = { ...this.allAppointments[updatedAppointmentIndex], ...response.data };
+            }
+
+            const updatedAppointmentViaAgentIndex = this.appointments.findIndex(appointment => appointment.id === appointmentId);
+            if (updatedAppointmentViaAgentIndex !== -1) {
+                this.appointments[updatedAppointmentViaAgentIndex] = { ...this.appointments[updatedAppointmentViaAgentIndex], ...response.data };
+            }
+        }
     }
 })

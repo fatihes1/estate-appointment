@@ -8,9 +8,11 @@ import {useAppointmentStore} from "@/stores/AppointmentStore.ts";
 const appointmentStore = useAppointmentStore();
 
 const onChange = (value: RangeValue, dateString: [string, string]) => {
-  console.log('Selected Time: ', value);
-  console.log('Formatted Selected Time: ', dateString);
-  appointmentStore.setDateRange(new Date(dateString[0]), new Date(dateString[1]))
+  if (value) {
+    appointmentStore.setDateRange(new Date(dateString[0]).toISOString(), new Date(dateString[1]).toISOString())
+    return;
+  }
+  appointmentStore.setDateRange('', '');
 };
 
 </script>
