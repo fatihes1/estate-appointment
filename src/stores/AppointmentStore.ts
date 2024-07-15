@@ -46,7 +46,7 @@ export const useAppointmentStore = defineStore('appointmentStore', {
       return this.filteredAppointments.length
     },
     filteredAppointments(state): OneAppointmentResponseModel[] {
-      return this.allAppointments.filter((appointment, index) => {
+      return this.allAppointments.filter((appointment) => {
         if (this.selectedAgents.length > 0) {
           // Eğer appointment'ın agent_id'si yoksa veya boş bir dizi ise, bu appointment'ı filtrele
           if (
