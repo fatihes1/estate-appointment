@@ -1,4 +1,5 @@
 import axiosInstance from "./axios-instance.ts";
+import {CreateAppointmentRequestModel} from "../models/appointments-model.ts";
 const APPOINTMENT_KEY = 'Appointments'
 
 export function getAllAppointments(pageSize: number = 10, offset?: string | null) {
@@ -34,5 +35,26 @@ export function getUpcomingAppointmentsByIds(appointmentIds: string[]) {
             filterByFormula: filterFormula,
             sort: [{ field: 'appointment_date', direction: 'asc' }]
         }
+    })
+}
+
+export function getRelatedAppointments(agentIds: string[]) {
+    const filterFormula = `OR(FIND(LOWER("${agentIds.join(',').toLowerCase()}"), LOWER({agent})) > 0)`
+    return axiosInstance.get(APPOINTMENT_KEY, {
+        params: {
+            filterByFormula: filterFormula
+        }
+    })
+}
+
+export function createAppointmentRequest(data: CreateAppointmentRequestModel) {
+    return axiosInstance.post(APPOINTMENT_KEY, {
+        fields: data
+    })
+}
+
+export function updateAppointmentRequest(appointmentId: string, data: CreateAppointmentRequestModel) {
+    return axiosInstance.patch(`${APPOINTMENT_KEY}/${appointmentId}`, {
+        fields: data
     })
 }

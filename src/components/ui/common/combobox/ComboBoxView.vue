@@ -6,6 +6,8 @@ import Combobox from "@/components/ui/common/combobox/ComboBox.vue";
 import {searchContactsByRecordIds, searchContactsRequest} from "@/requests/contacts-requests.ts";
 import {debounce} from "lodash-es";
 import {searchAgentRequest, searchAgentsByRecordIds} from "@/requests/agents-requests.ts";
+import {XMarkIcon} from "@heroicons/vue/24/outline";
+
 
 const loadUser = ref([]);
 
@@ -85,6 +87,10 @@ onMounted(() => {
   }}
 );
 
+const handleRemoveUser = (user) => {
+  loadUser.value = loadUser.value.filter(item => item.value !== user);
+};
+
 watch(loadUser, (newValues) => {
   emit('onSelectContact', newValues);
 });
@@ -94,8 +100,13 @@ watch(loadUser, (newValues) => {
 
 
 <template>
-  <div class="flex flex-wrap gap-x-2 mb-3" v-if="loadUser && loadUser.length > 0">
-    <a-badge v-for="person in loadUser" :key="person.id" :count="person.label" :number-style="{ backgroundColor: '#52c41a' }" />
+  <div class="flex flex-wrap gap-2 mb-3" v-if="loadUser && loadUser.length > 0">
+    <div class="flex flex-row gap-x-1 pl-3 pr-2 py-1 bg-green-300 rounded-full text-xs" v-for="person in loadUser" :key="person.id" >
+      {{ person.label }}
+      <a-tooltip :title="'Remove ' + props.filterType">
+        <div @click="handleRemoveUser(person.value)" class="w-4 h-4 cursor-pointer"><XMarkIcon /></div>
+      </a-tooltip>
+    </div>
   </div>
   <Combobox
       :load-options="loadUserDebounce"

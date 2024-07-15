@@ -31,6 +31,7 @@ declare module 'vue' {
     ARangePicker: typeof import('ant-design-vue/es')['RangePicker']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
+    ASwitch: typeof import('ant-design-vue/es')['Switch']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     Avatar: typeof import('./src/components/ui/common/avatar/Avatar.vue')['default']
     AvatarGroup: typeof import('./src/components/ui/common/filters/AvatarGroup.vue')['default']

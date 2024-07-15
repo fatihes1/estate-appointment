@@ -1,7 +1,16 @@
 import { defineStore } from "pinia"
-import {OneAppointmentResponseModel} from "../models/appointments-model.ts";
-import {getAllAppointments} from "../requests/appointments-requests.ts";
+import {
+    CreateAppointmentRequestModel,
+    OneAppointmentResponseModel,
+    UpdateAppointmentRequestModel
+} from "../models/appointments-model.ts";
+import {
+    createAppointmentRequest,
+    getAllAppointments,
+    updateAppointmentRequest
+} from "../requests/appointments-requests.ts";
 import {ALL_STATUSES, CANCELED, COMPLETED, UPCOMING} from "../enums/status-filter-enums.ts";
+
 
 export const useAppointmentStore = defineStore("appointmentStore",{
     state: () => ({
@@ -28,18 +37,10 @@ export const useAppointmentStore = defineStore("appointmentStore",{
         totalAppointments(state) {
             return state.allAppointments.length;
         },
-        totalFilteredAppointments(state) {
-            return state.filteredAppointments.length;
+        totalFilteredAppointments() {
+            return this.filteredAppointments.length;
         },
-        filteredAppointments(state): {
-            filteredAppointments: (state) => OneAppointmentResponseModel[];
-            paginatedAppointments: (state) => { [p: string]: any; [p: number]: any; [p: symbol]: any }[];
-            paginatedFilteredAppointments: { (): OneAppointmentResponseModel[] };
-            totalAppointments: (state) => number;
-            totalFilteredAppointments: (state) => any;
-            totalFilteredPages: { (): number };
-            totalPages: (state) => number
-        } {
+        filteredAppointments(state):OneAppointmentResponseModel[]  {
             return this.allAppointments.filter((appointment, index) => {
                 if (this.selectedAgents.length > 0) {
                     // Eğer appointment'ın agent_id'si yoksa veya boş bir dizi ise, bu appointment'ı filtrele
@@ -62,28 +63,29 @@ export const useAppointmentStore = defineStore("appointmentStore",{
                     const appointmentDate = new Date(appointment.fields.appointment_date);
                     console.log(`IS CANCELED IN FIELDS FOR IND ${index} `, 'is_canceled' in appointment.fields)
                     console.log('FIELDS: ', appointment.fields.is_cancelled)
-                    if (this.selectedStatus === ALL_STATUSES) {
-                    } else if (this.selectedStatus === CANCELED) {
-                        // Sadece is_canceled değeri olan (yani iptal edilmiş) randevuları göster
-                        if (!appointment.fields.is_cancelled) {
-                            return false;
-                        }
-                    } else if (this.selectedStatus === UPCOMING) {
-                        // is_canceled değeri olmayan ve tarihi henüz geçmemiş randevuları göster
-                        if (('is_cancelled' in appointment.fields) || appointmentDate <= now) {
-                            return false;
-                        }
-                    } else if (this.selectedStatus === COMPLETED) {
-                        // is_canceled değeri olmayan ve tarihi geçmiş randevuları göster
-                        if (('is_cancelled' in appointment.fields) || appointmentDate > now) {
-                            return false;
-                        }
+
+                    switch (this.selectedStatus) {
+                        case ALL_STATUSES:
+                            break;
+                        case CANCELED:
+                            if (!appointment.fields.is_cancelled) return false;
+                            break;
+                        case UPCOMING:
+                            if (('is_cancelled' in appointment.fields) || appointmentDate <= now) return false;
+                            break;
+                        case COMPLETED:
+                            // is_canceled değeri olmayan ve tarihi geçmiş randevuları göster
+                            if (('is_cancelled' in appointment.fields) || appointmentDate > now) return false;
+                            break;
                     }
+
+
+
                 }
 
                 // Tarih aralığı filtresi
                 if (this.dateRange.start && this.dateRange.end) {
-                    const appointmentDate = new Date(appointment.fields.appointment_date);
+                    const appointmentDate = new Date(appointment.fields.appointment_date).toISOString();
                     if (appointmentDate < this.dateRange.start || appointmentDate > this.dateRange.end) {
                         return false;
                     }
@@ -158,6 +160,26 @@ export const useAppointmentStore = defineStore("appointmentStore",{
         setSearchText(text: string) {
             this.searchText = text;
             this.currentPage = 1;
+        },
+        getRelatedAppointmentsByContactId(contactId: string) {
+            return this.allAppointments.filter(appointment => appointment.fields.contact_id.some(id => id === contactId));
+        },
+        async createNewAppointment(appointmentData: CreateAppointmentRequestModel){
+            const response = await createAppointmentRequest(appointmentData)
+            this.setAllAppointments([{...response.data, is_new: true}, ...this.allAppointments, ])
+        },
+        async updateAppointment(appointmentId: string, appointmentData: UpdateAppointmentRequestModel) {
+            const response = await updateAppointmentRequest(appointmentId, appointmentData);
+
+            const updatedAppointmentIndex = this.allAppointments.findIndex(appointment => appointment.id === appointmentId);
+            if (updatedAppointmentIndex !== -1) {
+                this.allAppointments[updatedAppointmentIndex] = { ...this.allAppointments[updatedAppointmentIndex], ...response.data };
+            }
+
+            const updatedAppointmentViaAgentIndex = this.appointments.findIndex(appointment => appointment.id === appointmentId);
+            if (updatedAppointmentViaAgentIndex !== -1) {
+                this.appointments[updatedAppointmentViaAgentIndex] = { ...this.appointments[updatedAppointmentViaAgentIndex], ...response.data };
+            }
         },
     }
 })

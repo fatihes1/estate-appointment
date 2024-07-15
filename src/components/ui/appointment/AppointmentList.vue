@@ -94,11 +94,11 @@ function openEditModal(recordId) {
   const selectedData = appointmentStore.appointments.find(appointment => appointment.id === recordId)
   contactData.value = {
     id: selectedData.id,
-    //appointment_date:  moment(selectedData.fields.appointment_date),
     appointment_date: dayjs(selectedData.fields.appointment_date),
     appointment_address: selectedData.fields.appointment_address,
     contact_id: selectedData.fields.contact_id,
-    agent_id: selectedData.fields.agent_id
+    agent_id: selectedData.fields.agent_id,
+    is_cancelled: selectedData.fields.is_cancelled ? selectedData.fields.is_cancelled : false
   }
   isOpen.value = true
 }

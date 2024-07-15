@@ -15,9 +15,7 @@ const debouncedSetSearchValue = debounce((value: string) => {
 
 // searchValue'yu takip et ve değiştiğinde debounce fonksiyonunu çağır
 watch(searchValue, (newValue) => {
-  if (newValue.length > 2) {
     debouncedSetSearchValue(newValue);
-  }
 });
 
 // Bileşen yok edildiğinde bekleyen debounce çağrılarını iptal et

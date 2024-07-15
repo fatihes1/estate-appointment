@@ -12,8 +12,10 @@ const props = defineProps({
 
 <template>
   <div class="h-full flex flex-row justify-start items-center gap-x-1 truncate px-5">
-    <home-icon class="h-5 w-5 text-gray-500 pb-1" />
-    <span class="text-black font-medium text-sm truncate">{{ location ? location : 'No specified address' }}</span>
+      <home-icon class="h-5 w-5 text-gray-500 pb-1" />
+    <a-tooltip :title="location">
+      <span class="text-black font-medium text-sm truncate">{{ location ? location : 'No specified address' }}</span>
+    </a-tooltip>
   </div>
 </template>
 
