@@ -22,7 +22,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <a-input v-model:value="searchValue" placeholder="Basic usage">
+  <a-input v-model:value="searchValue" placeholder="Search">
     <template #suffix>
       <a-tooltip
         title="You can search via contact name, contact email, contact phone or appointment location."
