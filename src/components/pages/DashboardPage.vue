@@ -1,4 +1,3 @@
-
 <template>
   <filter-section />
   <status-section />
@@ -6,13 +5,11 @@
 </template>
 
 <script setup lang="ts">
-import {useUserStore} from "@/stores/UserStore.ts";
-import {useAppointmentStore} from "@/stores/AppointmentStore.ts";
-import {onMounted} from "vue";
-import FilterSection from "@/components/ui/home/FilterSection.vue";
-import StatusSection from "@/components/ui/home/StatusSection.vue";
-import AppointmentList from "@/components/ui/home/AppointmentList.vue";
-const userStore = useUserStore()
+import { useAppointmentStore } from '@/stores/AppointmentStore.ts'
+import { onMounted } from 'vue'
+import FilterSection from '@/components/ui/home/FilterSection.vue'
+import StatusSection from '@/components/ui/home/StatusSection.vue'
+import AppointmentList from '@/components/ui/home/AppointmentList.vue'
 const appointmentStore = useAppointmentStore()
 
 onMounted(() => {
@@ -20,6 +17,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
