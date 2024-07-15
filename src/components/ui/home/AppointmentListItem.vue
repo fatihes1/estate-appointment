@@ -7,6 +7,7 @@ import AppointmentAgents from "@/components/ui/home/AppointmentAgents.vue";
 import {ref} from "vue";
 import AppointmentModal from "@/components/ui/modals/AppointmentModal.vue";
 import dayjs from "dayjs";
+import {EDIT_MODAL} from "@/enums/modal-type-enums.ts";
 
 
 const props = defineProps({
@@ -93,7 +94,7 @@ function closeModal() {
   <appointment-modal
       :isOpen="isOpen"
       :on-cancel="closeModal"
-      :modal-type="'edit'"
+      :modal-type="EDIT_MODAL"
       :record="contactData"
   />
 </template>

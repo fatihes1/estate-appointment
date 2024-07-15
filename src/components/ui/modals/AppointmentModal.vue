@@ -34,7 +34,7 @@
                   as="h3"
                   class="text-lg font-medium leading-6 text-gray-900"
               >
-                {{ modalType === 'add' ? 'Add Appointment' : 'Update Appointment' }}
+                {{ modalType === ADD_MODAL ? 'Add Appointment' : 'Update Appointment' }}
               </DialogTitle>
               <div class="mt-2">
                 <a-form
@@ -91,7 +91,7 @@
                       label="Appointment Status"
                       name="appointment_status"
                       class="mb-2"
-                      v-if="modalType === 'edit'"
+                      v-if="modalType === EDIT_MODAL"
                   >
                     <a-select
                         size="large"
@@ -105,9 +105,12 @@
 
                 </a-form>
               </div>
-              <h3 class="text-sm font-medium leading-6 text-gray-900">Related Appointments</h3>
-              <div v-if="relatedAppointments && relatedAppointments.length > 0 && modalType === 'edit'" class="related-appointment-list pb-2">
+              <h3 v-if="modalType === EDIT_MODAL" class="text-sm font-medium leading-6 text-gray-900">Related Appointments</h3>
+              <div v-if="relatedAppointments && relatedAppointments.length > 0 && modalType === EDIT_MODAL" class="related-appointment-list pb-2">
                 <appointment-list-item v-for="(appointment, index) in relatedAppointments" :index="index" :appointment="appointment" :key="appointment.id" :clickable="false" />
+              </div>
+              <div v-if="modalType===EDIT_MODAL && relatedAppointments.length === 0">
+                <empty-state :message="'No related appointments found for this contact.'" />
               </div>
               <div class="mt-4 flex flex-row justify-end gap-x-4">
                 <button
@@ -122,7 +125,7 @@
                     class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline duration-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     @click="onSubmit"
                 >
-                  {{ modalType === 'add' ? 'Create' : 'Update'}}
+                  {{ modalType === ADD_MODAL ? 'Create' : 'Update'}}
                 </button>
               </div>
             </DialogPanel>
@@ -181,6 +184,8 @@ import {useAppointmentStore} from "@/stores/AppointmentStore.ts";
 import {CANCELED, NOT_CANCELED} from "@/enums/status-filter-enums.ts";
 import AppointmentListItem from "@/components/ui/home/AppointmentListItem.vue";
 import moment from "moment";
+import EmptyState from "@/components/ui/common/empty/EmptyState.vue";
+import {ADD_MODAL, EDIT_MODAL} from "@/enums/modal-type-enums.ts";
 const appointmentStore = useAppointmentStore();
 
 const selectedContacts = ref([]);
@@ -216,7 +221,7 @@ const onSubmit = () => {
     message.error('Please input appointment date!');
     return;
   }
-  if (props.modalType === 'add') {
+  if (props.modalType === ADD_MODAL) {
     if (new Date(formState.value.appointment_date).toISOString() < new Date().toISOString()) {
       message.error('Appointment date should be greater than current date!');
       return;
@@ -237,7 +242,7 @@ const onSubmit = () => {
     agent_id: selectedAgents.value.map((item) => item.value),
     is_cancelled: false
   };
-  if (props.modalType === 'add') {
+  if (props.modalType === ADD_MODAL) {
     message.loading('Creating Appointment...', 0.5)
     appointmentStore.createNewAppointment(requestBody);
     message.success('Appointment created successfully!');
@@ -271,9 +276,9 @@ watch(() => props.isOpen, (newVal) => {
     formState.value = { ...props.record };
     appointmentStatus.value = props.record.is_cancelled ? CANCELED : NOT_CANCELED;
 
-    if (props.modalType === 'edit'){
+    if (props.modalType === EDIT_MODAL){
       if (props.record.contact_id && props.record.contact_id.length > 0) {
-        relatedAppointments.value = appointmentStore.getRelatedAppointmentsByContactId(props.record.contact_id[0]);
+        relatedAppointments.value = appointmentStore.getRelatedAppointmentsByContactId(props.record.contact_id[0], props.record.id);
       }
     }
   }

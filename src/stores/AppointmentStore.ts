@@ -162,8 +162,8 @@ export const useAppointmentStore = defineStore("appointmentStore",{
             this.searchText = text;
             this.currentPage = 1;
         },
-        getRelatedAppointmentsByContactId(contactId: string) {
-            return this.allAppointments.filter(appointment => appointment.fields.contact_id.some(id => id === contactId));
+        getRelatedAppointmentsByContactId(contactId: string, existAppointmentId: string) {
+            return this.allAppointments.filter(appointment => appointment.fields.contact_id.some(id => id === contactId && appointment.id !== existAppointmentId));
         },
         async createNewAppointment(appointmentData: CreateAppointmentRequestModel){
             const response = await createAppointmentRequest(appointmentData)

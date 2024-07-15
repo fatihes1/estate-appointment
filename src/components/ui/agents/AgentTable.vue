@@ -28,10 +28,10 @@
             <td :class="[personIdx !== agents.length - 1 ? 'border-b border-gray-200' : '', 'whitespace-nowrap px-3 py-4 text-sm text-gray-500']">{{ person.fields.appointments ? person.fields.appointments.length : 0}}</td>
             <td :class="[personIdx !== agents.length - 1 ? 'border-b border-gray-200' : '', 'relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-8 lg:pr-8']">
               <div class="flex flex-row gap-x-4">
-                <button @click="() => console.log('EDIT BUTTON CLICKED')" class="flex justify-center items-center w-7 h-7 bg-gray-200 rounded-md text-black hover:bg-indigo-500 hover:text-white duration-100">
+                <button disabled @click="() => console.log('EDIT BUTTON CLICKED')" class="cursor-not-allowed flex justify-center items-center w-7 h-7 bg-gray-200 rounded-md text-black hover:bg-indigo-500 hover:text-white duration-100">
                   <PencilSquareIcon class="h-4 w-4" aria-hidden="true" />
                 </button>
-                <button @click="() => console.log('DELETE BUTTON CLICKED')" class="flex justify-center items-center w-7 h-7 bg-gray-200 rounded-md text-black hover:bg-indigo-500 hover:text-white duration-100">
+                <button disabled @click="() => console.log('DELETE BUTTON CLICKED')" class="cursor-not-allowed  flex justify-center items-center w-7 h-7 bg-gray-200 rounded-md text-black hover:bg-indigo-500 hover:text-white duration-100">
                   <TrashIcon class="h-4 w-4" aria-hidden="true" />
                 </button>
               </div>

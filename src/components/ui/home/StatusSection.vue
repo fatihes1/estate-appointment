@@ -21,7 +21,7 @@
   <appointment-modal
       :isOpen="isOpen"
       :on-cancel="closeModal"
-      :modal-type="'add'"
+      :modal-type="ADD_MODAL"
   />
 </template>
 
@@ -32,6 +32,7 @@ import {useAppointmentStore} from "@/stores/AppointmentStore.ts";
 import {onMounted, ref} from "vue";
 import {PlusIcon} from "@heroicons/vue/20/solid";
 import AppointmentModal from "@/components/ui/modals/AppointmentModal.vue";
+import {ADD_MODAL} from "@/enums/modal-type-enums.ts";
 const appointmentStore = useAppointmentStore()
 const isOpen = ref(false)
 function closeModal() {
