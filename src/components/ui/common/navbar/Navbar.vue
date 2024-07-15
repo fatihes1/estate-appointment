@@ -6,6 +6,7 @@ import { PlusIcon } from '@heroicons/vue/20/solid'
 import UserSelection from "@/components/ui/common/navbar/UserSelection.vue";
 import {ref} from "vue";
 import AppointmentModal from "@/components/ui/modals/AppointmentModal.vue";
+import {ADD_MODAL} from "@/enums/modal-type-enums.ts";
 
 const isOpen = ref(false)
 function closeModal() {
@@ -152,7 +153,7 @@ function openCreateModal() {
   <appointment-modal
       :isOpen="isOpen"
       :on-cancel="closeModal"
-      :modal-type="'add'"
+      :modal-type="ADD_MODAL"
   />
 </template>
 
