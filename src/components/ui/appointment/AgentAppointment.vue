@@ -8,7 +8,7 @@
         </p>
         <button @click="openCreateModal" type="button" class="mt-8 w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Appointment</button>
       </div>
-      <appointment-list />
+      <agent-appointment-list />
     </div>
   </div>
   <appointment-modal
@@ -21,7 +21,7 @@
 <script setup>
 import {useUserStore} from "@/stores/UserStore.ts";
 import {useAppointmentStore} from "@/stores/AppointmentStore.ts";
-import AppointmentList from "@/components/ui/appointment/AppointmentList.vue";
+import AgentAppointmentList from "@/components/ui/appointment/AgentAppointmentList.vue";
 import AppointmentModal from "@/components/ui/modals/AppointmentModal.vue";
 import {ref} from "vue";
 import {ADD_MODAL} from "@/enums/modal-type-enums.ts";
