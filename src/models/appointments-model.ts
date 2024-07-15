@@ -25,3 +25,19 @@ export type OneAppointmentResponseModel = {
     createdTime: string,
     fields: AppointmentModel
 }
+
+export type CreateAppointmentRequestModel = {
+    appointment_date: string,
+    appointment_address: string,
+    contact_id: string[],
+    agent_id: string[],
+    is_cancelled: boolean
+}
+
+export type UpdateAppointmentRequestModel = {
+    appointment_date: string,
+    appointment_address: string,
+    contact_id: string[],
+    agent_id: string[],
+    is_cancelled: boolean
+}

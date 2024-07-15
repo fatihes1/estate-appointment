@@ -41,11 +41,8 @@
                     :model="formState"
                     name="basic"
                     :layout="'vertical'"
-                    :label-col="{ span: 10 }"
-                    :wrapper-col="{ span: 16 }"
+                    :label-col="{ span: 16 }"
                     autocomplete="off"
-                    @finish="onFinish"
-                    @finishFailed="onFinishFailed"
                 >
                   <a-form-item
                       label="Address"
@@ -86,30 +83,41 @@
                     <combo-box-view @onSelectContact="handleSelectedAgents" :filter-type="'agent'" :initial-selected="formState.agent_id" />
                   </a-form-item>
 
-                  <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-                    <a-button type="primary" html-type="submit">Submit</a-button>
+                  <a-form-item
+                      label="Appointment Status"
+                      name="appointment_status"
+                      v-if="modalType === 'edit'"
+                  >
+                    <a-select
+                        size="large"
+                        v-model:value="appointmentStatus">
+                      <a-select-option v-if="new Date(formState.appointment_date).toISOString() > new Date().toISOString()" :value="NOT_CANCELED">Upcoming</a-select-option>
+                      <a-select-option v-else :value="NOT_CANCELED">Completed</a-select-option>
+                      <a-select-option :value="CANCELED">Canceled</a-select-option>
+                    </a-select>
                   </a-form-item>
+
+
                 </a-form>
               </div>
-              <div>
-                <pre>
-                  {{formState}}
-                </pre>
+              <h3 class="text-sm font-medium leading-6 text-gray-900">Related Appointments</h3>
+              <div v-if="relatedAppointments && relatedAppointments.length > 0 && modalType === 'edit'" class="related-appointment-list pb-2">
+                <appointment-list-item v-for="(appointment, index) in relatedAppointments" :index="index" :appointment="appointment" :key="appointment.id" :clickable="false" />
               </div>
-              <div class="mt-4 flex flex-row justify-end gap-x-2">
+              <div class="mt-4 flex flex-row justify-end gap-x-4">
                 <button
                     type="button"
-                    class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    class="relative inline-flex items-center gap-x-1.5 rounded-md bg-gray-200 px-3 py-2 text-sm text-gray-800 shadow-sm hover:bg-gray-500 hover:text-white duration-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     @click="onCancel"
                 >
-                  Got it, thanks!
+                  Cancel
                 </button>
                 <button
                     type="button"
-                    class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    @click="onCancel"
+                    class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline duration-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    @click="onSubmit"
                 >
-                  Got it, thanks!
+                  {{ modalType === 'add' ? 'Create' : 'Update'}}
                 </button>
               </div>
             </DialogPanel>
@@ -128,7 +136,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/vue'
-import moment from 'moment'
+
 import { Form as AForm, FormItem as AFormItem, Input as AInput, InputPassword as AInputPassword, DatePicker as ADatePicker } from 'ant-design-vue';
 
 const props = defineProps({
@@ -149,35 +157,37 @@ const props = defineProps({
     type: Object,
     required: false,
     default: {
-      appointment_id: null,
+      id: null,
       appointment_address: '',
-      appointment_date: '',
+      appointment_date: null,
       contact_id: [],
-      agent_id: []
+      agent_id: [],
+      is_cancelled: false
     }
   }
 })
 
 
-import {ref, watch} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import ComboBoxView from "@/components/ui/common/combobox/ComboBoxView.vue";
+import { message } from 'ant-design-vue';
+
+import {useAppointmentStore} from "@/stores/AppointmentStore.ts";
+import {CANCELED, NOT_CANCELED} from "@/enums/status-filter-enums.ts";
+import AppointmentListItem from "@/components/ui/home/AppointmentListItem.vue";
+const appointmentStore = useAppointmentStore();
+
 const selectedContacts = ref([]);
 const selectedAgents = ref([]);
+const relatedAppointments = ref([]);
+
+const appointmentStatus = ref(props.record.is_cancelled ? CANCELED : NOT_CANCELED);
 
 const onChange = (value, dateString) => {
-  formState.appointment_date = moment.utc(dateString, 'YYYY-MM-DD HH:mm').toISOString()
+  formState.appointment_date = new Date(dateString).toISOString();
 };
-
 
 const formState = ref({ ...props.record });
-
-const onFinish = (values) => {
-  console.log('Success:', values);
-};
-
-const onFinishFailed = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
 
 function handleSelectedContacts(selectedItems) {
   selectedContacts.value = selectedItems;
@@ -187,6 +197,53 @@ function handleSelectedAgents(selectedItems) {
   selectedAgents.value = selectedItems;
 }
 
+const onSubmit = () => {
+  if (!formState.value.appointment_address) {
+    message.error('Please input appointment address!');
+    return;
+  }
+  if (!formState.value.appointment_date) {
+    message.error('Please input appointment date!');
+    return;
+  }
+  if (props.modalType === 'add') {
+    if (new Date(formState.value.appointment_date).toISOString() < new Date().toISOString()) {
+      message.error('Appointment date should be greater than current date!');
+      return;
+    }
+  }
+  if (selectedContacts.value.length === 0) {
+    message.error('Please at least select one contact!');
+    return;
+  }
+  if (selectedAgents.value.length === 0) {
+    message.error('Please at least select one agent!');
+    return;
+  }
+  const requestBody = {
+    appointment_address: formState.value.appointment_address,
+    appointment_date: new Date(formState.value.appointment_date).toISOString(),
+    contact_id: selectedContacts.value.map((item) => item.value),
+    agent_id: selectedAgents.value.map((item) => item.value),
+    is_cancelled: false
+  };
+  if (props.modalType === 'add') {
+    message.loading('Creating Appointment...', 0.5)
+    appointmentStore.createNewAppointment(requestBody);
+    message.success('Appointment created successfully!');
+    props.onCancel();
+  } else {
+    message.loading('Updating Appointment...', 0.5)
+    const updateRequestBody = {
+      ...requestBody,
+      is_cancelled: appointmentStatus.value === CANCELED
+    };
+    appointmentStore.updateAppointment(formState.value.id, updateRequestBody);
+    message.success('Appointment updated successfully!');
+    props.onCancel();
+  }
+};
+
 watch(() => selectedContacts.value, (newVal) => {
   formState.value.contact_id = newVal;
 });
@@ -195,12 +252,21 @@ watch(() => selectedAgents.value, (newVal) => {
   formState.value.agent_id = newVal;
 });
 
+watch(() => appointmentStatus.value, (newVal) => {
+  formState.value.is_cancelled = newVal;
+});
+
 watch(() => props.isOpen, (newVal) => {
   if (newVal) {
     formState.value = { ...props.record };
+    appointmentStatus.value = props.record.is_cancelled ? CANCELED : NOT_CANCELED;
+
+    if (props.modalType === 'edit'){
+      if (props.record.contact_id && props.record.contact_id.length > 0) {
+        relatedAppointments.value = appointmentStore.getRelatedAppointmentsByContactId(props.record.contact_id[0]);
+      }
+    }
   }
 });
-
-
 
 </script>

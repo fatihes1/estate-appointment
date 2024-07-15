@@ -3,9 +3,10 @@
   <a-avatar-group
     :max-count="maxCount"
     size="default"
-    :max-style="{ backgroundColor: '#e2e2e2', color: '#000000' }"
+    :max-style="{ backgroundColor: '#e2e2e2', color: '#000000', cursor: 'pointer' }"
+    maxPopoverPlacement="bottom"
   >
-    <a-tooltip v-for="user in users" :title="user.name + ' ' + user.surname" :key="user.id">
+    <a-tooltip v-for="user in users" :title="user.name + ' ' + user.surname" :key="user.id" placement="topLeft">
       <a-avatar
           @click="clickable ? handleOnClickAvatar(user.id) : null"
           class="border-2 border-white text-xs flex justify-center items-center"
