@@ -101,7 +101,7 @@ watch(loadUser, (newValues) => {
 
 <template>
   <div class="flex flex-wrap gap-2 mb-3" v-if="loadUser && loadUser.length > 0">
-    <div class="flex flex-row gap-x-1 pl-3 pr-2 py-1 bg-green-300 rounded-full text-xs" v-for="person in loadUser" :key="person.id" >
+    <div class="flex flex-row gap-x-1 pl-3 pr-2 py-1 bg-indigo-300 rounded-full text-xs" v-for="person in loadUser" :key="person.id" >
       {{ person.label }}
       <a-tooltip :title="'Remove ' + props.filterType">
         <div @click="handleRemoveUser(person.value)" class="w-4 h-4 cursor-pointer"><XMarkIcon /></div>
