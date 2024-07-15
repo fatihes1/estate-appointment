@@ -47,6 +47,7 @@
                   <a-form-item
                       label="Address"
                       name="appointment_address"
+                      class="mb-2"
                       :rules="[{ required: true, message: 'Please input appointment address!' }]"
                   >
                     <a-input size="large" v-model:value="formState.appointment_address" />
@@ -55,6 +56,7 @@
                   <a-form-item
                       label="Appointment Date"
                       name="appointment_date"
+                      class="mb-2"
                       :rules="[{ required: true, message: 'Please input appointment date!' }]"
                   >
                     <a-date-picker
@@ -71,6 +73,7 @@
                   <a-form-item
                     label="Contacts"
                     name="contacts"
+                    class="mb-2"
                     :rules="[{ required: true, message: 'Please select contacts!' }]"
                   >
                     <combo-box-view @onSelectContact="handleSelectedContacts" :filter-type="'contact'" :initial-selected="formState.contact_id" />
@@ -78,6 +81,7 @@
                   <a-form-item
                       label="Agents"
                       name="agents"
+                      class="mb-2"
                       :rules="[{ required: true, message: 'Please select contacts!' }]"
                   >
                     <combo-box-view @onSelectContact="handleSelectedAgents" :filter-type="'agent'" :initial-selected="formState.agent_id" />
@@ -86,6 +90,7 @@
                   <a-form-item
                       label="Appointment Status"
                       name="appointment_status"
+                      class="mb-2"
                       v-if="modalType === 'edit'"
                   >
                     <a-select
@@ -175,6 +180,7 @@ import { message } from 'ant-design-vue';
 import {useAppointmentStore} from "@/stores/AppointmentStore.ts";
 import {CANCELED, NOT_CANCELED} from "@/enums/status-filter-enums.ts";
 import AppointmentListItem from "@/components/ui/home/AppointmentListItem.vue";
+import moment from "moment";
 const appointmentStore = useAppointmentStore();
 
 const selectedContacts = ref([]);
@@ -184,6 +190,10 @@ const relatedAppointments = ref([]);
 const appointmentStatus = ref(props.record.is_cancelled ? CANCELED : NOT_CANCELED);
 
 const onChange = (value, dateString) => {
+  if (!value) {
+    formState.appointment_date = null
+    return;
+  }
   formState.appointment_date = new Date(dateString).toISOString();
 };
 

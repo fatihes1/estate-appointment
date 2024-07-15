@@ -21,6 +21,7 @@ declare module 'vue' {
     AInputPassword: typeof import('ant-design-vue/es')['InputPassword']
     AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
     APagination: typeof import('ant-design-vue/es')['Pagination']
+    APopconfirm: typeof import('ant-design-vue/es')['Popconfirm']
     Appointment: typeof import('./src/components/ui/appointment/Appointment.vue')['default']
     AppointmentAgents: typeof import('./src/components/ui/home/AppointmentAgents.vue')['default']
     AppointmentList: typeof import('./src/components/ui/appointment/AppointmentList.vue')['default']

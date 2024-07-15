@@ -17,4 +17,10 @@
         max-height: 25vh;
         overflow-y: scroll;
     }
+
+    .appointment-list-page {
+        height: 80vh;
+        max-height: 80vh;
+        overflow-y: scroll;
+    }
 }
