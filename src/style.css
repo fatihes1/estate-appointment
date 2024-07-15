@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer components {
+    .table-height {
+        max-height: 65vh;
+    }
+    .appointment-list {
+        height: 65vh;
+        max-height: 65vh;
+        overflow-y: scroll;
+    }
+    .related-appointment-list {
+        height: 25vh;
+        max-height: 25vh;
+        overflow-y: scroll;
+    }
+
+    .appointment-list-page {
+        height: 80vh;
+        max-height: 80vh;
+        overflow-y: scroll;
+    }
+}
