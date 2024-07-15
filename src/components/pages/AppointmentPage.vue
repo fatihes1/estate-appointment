@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import Appointment from "@/components/ui/appointment/Appointment.vue";
+import AgentAppointment from '@/components/ui/appointment/AgentAppointment.vue'
 </script>
 
 <template>
-  <appointment />
+  <agent-appointment />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
