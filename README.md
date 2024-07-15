@@ -27,13 +27,20 @@ Follow these steps to get the project up and running on your local machine:
     npm install
     ```
    
-3. **Start the development server:**
+3. **Create a copy `.env.example` file**
+
+    ```bash
+    cp .env.example .env
+    ```
+and make sure to fill the `.env` file with the correct values. Especially `VITE_APP_AIRTABLE_ACCESS_TOKEN` .
+
+4. **Start the development server:**
 
     ```bash
     npm run dev
     ```
    
-4. **Open the application in your browser:**
+5. **Open the application in your browser:**
 
     Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
 
