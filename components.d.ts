@@ -41,7 +41,6 @@ declare module 'vue' {
     AvatarGroup: typeof import('./src/components/ui/common/filters/AvatarGroup.vue')['default']
     ComboBox: typeof import('./src/components/ui/common/combobox/ComboBox.vue')['default']
     ComboBoxView: typeof import('./src/components/ui/common/combobox/ComboBoxView.vue')['default']
-    ContactFilter: typeof import('./src/components/ui/common/ContactFilter.vue')['default']
     ContactPage: typeof import('./src/components/pages/ContactPage.vue')['default']
     ContactTable: typeof import('./src/components/ui/contact/ContactTable.vue')['default']
     DashboardPage: typeof import('./src/components/pages/DashboardPage.vue')['default']
